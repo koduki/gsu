@@ -1,7 +1,7 @@
 require 'google/apis/admin_directory_v1'
 require 'googleauth'
 
-class GCPAdminDirectory
+class GCPAdminAPI
     def initialize
         scope = [ 
             'https://www.googleapis.com/auth/admin.directory.group.readonly', 
@@ -16,25 +16,30 @@ class GCPAdminDirectory
         @service.authorization = authorization    
     end
 
-    def join_group(group_name, user_mail)
-        group = @service.list_groups(domain: @domain, query: "email:" + group_name}.groups.first
-        @service.list_members(group.email).members.each{|m|puts m.email}.first
+    def attach_group(user_name, group_name)
+        member = @service.list_users(domain: @domain, query: "email:" + user_name).users.first
 
-        member = @service.list_users(domain: @domain, query: "email:" + user_mail).users.first
-        @service.insert_member(group.email, member)
+        clear_privileges(user_name)
+        @service.insert_member(group_name, member)
     end
 
-    def leave_group(group_name, user_mail)
-        group = @service.list_groups(domain: @domain, query: "email:" + group_name}.groups.first
-        member = @service.list_users(domain: @domain, query: "email:" + user_mail).users.first
-        @service.delete_member(group.email, member.id)
+    def detach_group(user_name, group_name)
+        @service.delete_member(group_name, user_name)
     end
 
     def list_groups_all()
         @service.list_groups(domain: @domain).groups.map{|g| g.email}
     end
 
-    def list_groups()
-        @service.list_groups(domain: @domain, user_key: member.id).groups
+    def list_groups(user_name)
+        @service.list_groups(domain: @domain, user_key: user_name)
+                .groups
+                .map{|g| g.email}
+    end
+
+    def clear_privileges(user_name)
+        admins = @service.list_groups(domain: @domain, user_key: user_name).groups
+            .find_all{|x| x.email.include?("-admin@")}
+        admins.each{|g| @service.delete_member(g.email, user_name) }
     end
 end
