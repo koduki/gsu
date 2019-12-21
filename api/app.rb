@@ -2,6 +2,9 @@ require 'sinatra'
 require 'json'
 require './lib/gadmin_api.rb'
 
+set :bind, '0.0.0.0'
+set :port, ENV['PORT'] || '8080'
+
 post '/attach/:user_name/:group_name' do |u, g|
     content_type :json
 

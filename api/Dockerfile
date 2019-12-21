@@ -1,8 +1,9 @@
 FROM ruby
 
 RUN gem install google-api-client googleauth sinatra
+COPY --from=gcr.io/berglas/berglas:latest /bin/berglas /bin/berglas
 
-RUN mkdir -p /app
+ADD ./ /app
 WORKDIR /app
 
-CMD ["ruby", "app.rb", "-p", "8080", "-o", "0.0.0.0"]
+CMD ["/bin/berglas", "exec", "ruby", "app.rb"]

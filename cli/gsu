@@ -1,15 +1,17 @@
 #!/bin/bash
 
 API_URL=$(cat ${HOME}/.gsu_config|awk '{print $2}')
+TOKEN="Authorization: Bearer $(gcloud auth print-identity-token)"
+CONTENT_TYPE="Content-Type: application/json"
 
 if [ "$1" = "attach" ]; then
-    curl -d {} -H "Content-Type: application/json" -X POST ${API_URL}/attach/$2/$3
+    curl -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}" -X POST ${API_URL}/attach/$2/$3
 elif [ "$1" = "dettach" ]; then
-    curl -d {} -H "Content-Type: application/json" -X POST ${API_URL}/detach/$2/$3
+    curl -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/detach/$2/$3
 elif [ "$1" = "-la" ]; then
-    curl -H "Content-Type: application/json" -X GET ${API_URL}/groups
+    curl -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups
 elif [ "$1" = "-l" ]; then
-    curl -H "Content-Type: application/json" -X GET ${API_URL}/groups/$2
+    curl -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups/$2
 else
     echo "gsu: Switch GCP user role."
     echo "usage:"

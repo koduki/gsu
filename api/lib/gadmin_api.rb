@@ -9,6 +9,8 @@ class GCPAdminAPI
             'https://www.googleapis.com/auth/admin.directory.user.readonly' 
         ]
 
+        ENV['GOOGLE_APPLICATION_CREDENTIALS'] = ENV['SA_KEY'] if ENV['SA_KEY']
+
         @domain = ENV['GCP_DOMAIN']
         @service = Google::Apis::AdminDirectoryV1::DirectoryService.new
         authorization = Google::Auth.get_application_default(scope).dup
