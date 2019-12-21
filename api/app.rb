@@ -18,7 +18,6 @@ post '/detach/:user_name/:group_name' do |u, g|
     r.to_json
 end
 
-
 get '/groups' do 
     content_type :json
 

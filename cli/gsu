@@ -11,7 +11,7 @@ elif [ "$1" = "-la" ]; then
 elif [ "$1" = "-l" ]; then
     curl -H "Content-Type: application/json" -X GET ${API_URL}/groups/$2
 else
-    echo "gsu: switch GCP admin user roles."
+    echo "gsu: Switch GCP user role."
     echo "usage:"
     echo "    gsu attach {user_name} {group_name}"
     echo "    gsu detach {user_name} {group_name}"
