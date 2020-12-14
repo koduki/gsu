@@ -36,3 +36,11 @@ get '/groups/:user_name' do |u|
     r = admin.list_groups("#{u}@#{ENV['GCP_DOMAIN']}")
     r.to_json
 end
+
+get '/healthcheck' do 
+    content_type :json
+
+    admin = GCPAdminAPI.new
+    admin.healthcheck
+    {"status"=> "ok"}.to_json
+end

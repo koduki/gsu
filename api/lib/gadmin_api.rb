@@ -39,6 +39,11 @@ class GCPAdminAPI
                 .map{|g| g.email}
     end
 
+    def healthcheck()
+        @service.list_groups(domain: @domain).groups
+        @service.list_users(domain: @domain).users
+    end
+
     def clear_privileges(user_name)
         admins = @service.list_groups(domain: @domain, user_key: user_name).groups
             .find_all{|x| x.email.include?("-admin@")}
