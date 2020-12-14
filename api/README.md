@@ -1,5 +1,5 @@
 docker build -t koduki/gsu .
-docker run -it -p 8080:8080 -v `pwd`:/app -v ~/:/seacret -e GOOGLE_APPLICATION_CREDENTIALS=/seacret/koduki-docker-test-001-1083-ca8b638d0ee5.json koduki/gsu bash
+docker run -it -p 8080:8080 -v `pwd`:/app -v ~/:/secrets -e GOOGLE_APPLICATION_CREDENTIALS=/secrets/koduki-docker-test-001-1083-ca8b638d0ee5.json koduki/gsu bash
 
 API_URL="http://localhost:8080"
 TOKEN="Authorization: Bearer $(gcloud auth print-identity-token)"

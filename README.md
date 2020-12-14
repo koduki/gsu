@@ -55,8 +55,8 @@ export BUCKET_ID=${YOUR_BUCKET_ID}
 $ gcloud builds submit --tag gcr.io/${PROJECT_ID}/gsu .
 $ gcloud run deploy \
     --image gcr.io/${PROJECT_ID}/gsu \
-    --set-env-vars "GCP_ADMIN_USER=${GCP_ADMIN_USER},GCP_DOMAIN=${GCP_DOMAIN},SA_KEY=berglas://${BUCKET_ID}/sa-key?destination=tempfile" \
-    --platform=managed --region us-east1 \
-    --service-account gsu-455@${PROJECT_ID}.iam.gserviceaccount.com 
+    --set-env-vars "GCP_ADMIN_USER=${GCP_ADMIN_USER},GCP_DOMAIN=${GCP_DOMAIN}" \
+    --platform=managed --region us-central1 \
+    --service-account gsu-785@${PROJECT_ID}.iam.gserviceaccount.com
 ```
 
