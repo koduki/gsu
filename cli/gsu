@@ -2,23 +2,53 @@
 
 API_URL=$(cat ${HOME}/.gsu_config|awk '{print $2}')
 TOKEN="Authorization: Bearer $(gcloud auth print-identity-token)"
+GCP_USER=$(gcloud auth list --format json|jq -r '.[]|select(.status == "ACTIVE")|.account'|sed 's/@.*//g')
 CONTENT_TYPE="Content-Type: application/json"
 
-if [ "$1" = "attach" ]; then
-    curl -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}" -X POST ${API_URL}/attach/$2/$3
-elif [ "$1" = "dettach" ]; then
-    curl -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/detach/$2/$3
-elif [ "$1" = "jit" ]; then
-    curl -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/jit/$2/$3
+if [ "$1" = "admin" ]; then
+    if [ "$2" = "attach" ]; then
+        curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}" -X POST ${API_URL}/attach/$3/$4
+    elif [ "$2" = "detach" ]; then
+        curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/detach/$3/$4
+    else
+        echo "gsu admin: manage cloud identity groups."
+        echo "usage:"
+        echo "    gsu admin attach {user_name} {group_name}"
+        echo "    gsu admin detach {user_name} {group_name}"
+    fi
+elif [ "$1" = "config" ]; then
+    if [ "$2" = "scaffold" ]; then
+        echo "Type API URL"
+        echo "  e.g.) https://localhost:8080"
+        read input
+        echo "API_URL: $input" >  ${HOME}/.gsu_config
+    elif [ "$2" = "list" ]; then
+            cat ${HOME}/.gsu_config
+    elif [ "$2" = "set" ]; then
+        if [ "$3" = "API_URL" ]; then
+            echo "API_URL: $4" >  ${HOME}/.gsu_config
+        fi
+    else
+        echo "gsu config: view and edit gsu properties."
+        echo "usage:"
+        echo "    gsu config scaffold"
+        echo "    gsu config list"
+        echo "    gsu config set API_URL {API URL}"
+    fi
 elif [ "$1" = "-la" ]; then
-    curl -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups
+    curl -s -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups|jq -r .[]|sed 's/@.*//g'
 elif [ "$1" = "-l" ]; then
-    curl -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups/$2
-else
+    curl -s -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups/$GCP_USER|jq -r .[]|sed 's/@.*//g'
+elif [ -z "$1" ];then
     echo "gsu: Switch GCP user role."
     echo "usage:"
-    echo "    gsu attach {user_name} {group_name}"
-    echo "    gsu detach {user_name} {group_name}"
+    echo "    gsu {group_name}"
+    echo "    gsu -l "
     echo "    gsu -la"
-    echo "    gsu -l {user_name}"
+    echo "    gsu config scaffold"
+    echo "    gsu config set API_URL {API URL}"
+    echo "    gsu admin attach {user_name} {group_name}"
+    echo "    gsu admin detach {user_name} {group_name}"
+else
+    curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/jit/$GCP_USER/$1
 fi
