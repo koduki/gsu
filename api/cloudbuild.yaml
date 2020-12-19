@@ -1,0 +1,15 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/gsu', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/gsu']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'gsu', 
+  '--image', 'gcr.io/$PROJECT_ID/gsu', 
+  '--region', 'us-central1', 
+  '--platform', 'managed', 
+  '--set-env-vars', "GCP_ADMIN_USER=${_GCP_ADMIN_USER},GCP_DOMAIN=${_GCP_DOMAIN},GSU_API_URL=${_GSU_API_URL},GCP_PROJECT=${PROJECT_ID},GSU_SRC_ACCOUNT_KEY=gsu-credential,GCP_Q_LOCATION=us-central1,GCP_Q_NAME=q-gsu-events,GSU_SRC_ACCOUNT=gsu-api@${PROJECT_ID}.iam.gserviceaccount.com", 
+  '--service-account', 'gsu-api@${PROJECT_ID}.iam.gserviceaccount.com'
+  ]
+images:
+- gcr.io/$PROJECT_ID/gsu
