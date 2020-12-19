@@ -10,11 +10,14 @@ if [ "$1" = "admin" ]; then
         curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}" -X POST ${API_URL}/attach/$3/$4
     elif [ "$2" = "detach" ]; then
         curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/detach/$3/$4
+    elif [ "$2" = "groups" ]; then
+        curl -s -H "${TOKEN}" -H "${CONTENT_TYPE}" -X GET ${API_URL}/groups/$3|jq -r .[]|sed 's/@.*//g'
     else
         echo "gsu admin: manage cloud identity groups."
         echo "usage:"
         echo "    gsu admin attach {user_name} {group_name}"
         echo "    gsu admin detach {user_name} {group_name}"
+        echo "    gsu admin groups {user_name}"
     fi
 elif [ "$1" = "config" ]; then
     if [ "$2" = "scaffold" ]; then
@@ -49,6 +52,7 @@ elif [ -z "$1" ];then
     echo "    gsu config set API_URL {API URL}"
     echo "    gsu admin attach {user_name} {group_name}"
     echo "    gsu admin detach {user_name} {group_name}"
+    echo "    gsu admin groups {user_name}"
 else
-    curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/jit/$GCP_USER/$1
+    curl -s -d {} -H "${TOKEN}" -H "${CONTENT_TYPE}"-X POST ${API_URL}/jit/$GCP_USER/$1/3600
 fi

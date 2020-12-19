@@ -5,12 +5,12 @@ require './lib/gadmin_api.rb'
 set :bind, '0.0.0.0'
 set :port, ENV['PORT'] || '8080'
 
-post '/jit/:user_name/:group_name' do |u, g|
+post '/jit/:user_name/:group_name/:expire' do |u, g, sec|
     content_type :json
 
     admin = GCPAdminAPI.new
     r = admin.attach_group("#{u}@#{ENV['GCP_DOMAIN']}", "#{g}@#{ENV['GCP_DOMAIN']}")
-    admin.set_expire(60)
+    admin.set_expire(sec)
     
     r.to_json
 end

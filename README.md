@@ -1,7 +1,10 @@
 README
 ==========
 
-This is Just in Time PIM for GCP.
+`gsu` is Privileged Identity Management (PIM) for GCP. This allow you Just in Time access control liek `su` command. It's the best way to follow the least privilege principle.
+
+ref:
+- [GCPに管理者権限で入るのをやめる！ sudoコマンドのようなJust in Timeな権限管理](https://zenn.dev/koduki/articles/0a06a881d70397)
 
 CLI
 ----------
@@ -16,6 +19,7 @@ usage:
     gsu config set API_URL {API URL}
     gsu admin attach {user_name} {group_name}
     gsu admin detach {user_name} {group_name}
+    gsu admin groups {user_name}
 ```
 
 Config
@@ -26,12 +30,15 @@ $ cat ~/.gsu_config
 URL: http://localhost:8080
 ```
 
+Install CLI
+-----------
+
+```bash
+$ sudo ln -s `pwd`/cli/gsu /usr/bin/gsu
+$ echo "API_URL: https://gsu-vqrv34yqoa-uc.a.run.app" > ~/.gsu_config
+```
+
 Deploy API
 ---------
 
-```bash
-$ ./presetup.sh
-$ gcloud builds submit --config=cloudbuild.yaml \
-  --substitutions=_GCP_ADMIN_USER="${GCP_ADMIN_USER}",_GCP_DOMAIN="${GCP_DOMAIN}",_GSU_API_URL="${GSU_API_URL}" .
-```
-
+[Deploy API](api/README.md)
