@@ -1,7 +1,7 @@
 README
 ==========
 
-`gsu` is Privileged Identity Management (PIM) for GCP. This tool allows you **Just in Time access control** like `su` command. It's the best way to follow the least privilege principle.
+`gsu` is a Privileged Identity Management (PIM) Tool for GCP. This tool allows you **Just in Time access control** like `su` command. It's the best way to follow the least privilege principle.
 
 ref:
 - [GCPに管理者権限で入るのをやめる！ sudoコマンドのようなJust in Timeな権限管理](https://zenn.dev/koduki/articles/0a06a881d70397)
