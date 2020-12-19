@@ -22,23 +22,15 @@ usage:
     gsu admin groups {user_name}
 ```
 
-Config
-------------
-
-```bash
-$ cat ~/.gsu_config
-URL: http://localhost:8080
-```
-
 Install CLI
 -----------
 
 ```bash
 $ sudo ln -s `pwd`/cli/gsu /usr/bin/gsu
-$ echo "API_URL: https://gsu-vqrv34yqoa-uc.a.run.app" > ~/.gsu_config
+$ gsu config scaffold
 ```
 
 Deploy API
 ---------
 
-[Deploy API](api/README.md)
+[API](api/README.md)
